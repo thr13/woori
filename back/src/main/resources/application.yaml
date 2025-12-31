@@ -1,3 +1,22 @@
 spring:
   application:
     name: back
+
+  server:
+    port: 8080
+    servlet:
+      encoding: UTF-8
+      force: true
+
+  datasource:
+    url: jdbc://mysql://localhost:3306/woori?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: { MYSQL_DB_USER }
+    password: { MYSQL_DB_PASSWORD }
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      format_sql: true
+      show_sql: true
