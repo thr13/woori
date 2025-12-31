@@ -1,13 +1,13 @@
-package com.project.woori;
+package com.woori.back;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WooriApplication {
+public class BackApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WooriApplication.class, args);
+		SpringApplication.run(BackApplication.class, args);
 	}
 
 }
