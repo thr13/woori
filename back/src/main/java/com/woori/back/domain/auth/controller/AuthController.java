@@ -59,4 +59,17 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        String refreshToken = jwtProvider.extractRefreshToken(request);
+
+        if (refreshToken == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        authService.logout(refreshToken);
+
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -82,19 +82,32 @@ public class AuthService {
     public TokenResponse reissue(String refreshToken) {
         log.info("토큰 재발급 전: {}", refreshToken);
 
-        jwtProvider.validateRefreshToken(refreshToken);
+        jwtProvider.validateRefreshToken(refreshToken); // jwt 검증
+
+        getRefreshToken(refreshToken); // redis 토큰 존재 여부
 
         Long userId = jwtProvider.getUserId(refreshToken);
         String role = jwtProvider.getRole(refreshToken);
 
-        refreshTokenRepository.findByToken(refreshToken)
-                .orElseThrow(
-                        () -> new NotFoundRefreshTokenException("Invalid token")
-                );
-
-        String newAccessToken = jwtProvider.createAccessToken(userId, role);
+        String newAccessToken = jwtProvider.createAccessToken(userId, role); // 액세스 토큰 발급
         log.info("재발급된 accessToken: {}", newAccessToken);
 
         return new TokenResponse(newAccessToken, refreshToken, jwtProperties.getRefreshTokenExpireMs());
+    }
+
+    @Transactional
+    public void logout(String refreshToken) {
+        log.info("로그아웃 전: {}", refreshToken);
+        jwtProvider.validateToken(refreshToken); // 토큰 자체 검증
+
+        RefreshToken storedToken = getRefreshToken(refreshToken); // redis 에 저장된 token 획득
+
+        refreshTokenRepository.delete(storedToken); // 토큰 삭제
+        log.info("로그아웃 성공");
+    }
+
+    private RefreshToken getRefreshToken(String refreshToken) {
+        return refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new NotFoundRefreshTokenException("Already logged out"));
     }
 }
