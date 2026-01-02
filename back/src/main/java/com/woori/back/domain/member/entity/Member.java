@@ -29,6 +29,9 @@ public class Member {
     @Column(nullable = false)
     private Role role; // 회원 등급(손님, 사장, 관리자)
 
+    @Column(nullable = true)
+    private SocialProvider socialProvider; // 소셜 로그인 타입 (네이버, 깃허브, 구글 등)
+
     @Builder
     private Member(String email, String password, String name, Role role) {
         this.email = email;
