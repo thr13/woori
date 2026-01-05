@@ -1,4 +1,4 @@
-package com.woori.back.domain.member.dto;
+package com.woori.back.domain.auth.dto;
 
 import com.woori.back.domain.member.entity.Member;
 import com.woori.back.domain.member.entity.Role;
@@ -19,12 +19,12 @@ public class MemberSignUpRequest {
     @NotBlank
     private String name;
 
-    public Member toEntity(String password, Role role) {
-        return Member.builder()
-                .email(this.email)
-                .password(password)
-                .name(this.name)
-                .role(role)
-                .build();
+    public Member signUp(String password, Role role) {
+        return Member.createMember(
+                this.email,
+                password,
+                this.name,
+                role
+        );
     }
 }
