@@ -1,11 +1,11 @@
 package com.woori.back.domain.auth.service;
 
 import com.woori.back.domain.auth.dto.LoginRequest;
+import com.woori.back.domain.auth.dto.MemberSignUpRequest;
 import com.woori.back.domain.auth.dto.TokenResponse;
 import com.woori.back.domain.auth.entity.RefreshToken;
 import com.woori.back.domain.auth.exception.NotFoundRefreshTokenException;
 import com.woori.back.domain.auth.repository.RefreshTokenRepository;
-import com.woori.back.domain.member.dto.MemberSignUpRequest;
 import com.woori.back.domain.member.entity.Member;
 import com.woori.back.domain.member.entity.Role;
 import com.woori.back.domain.member.exception.DuplicateEmailException;
@@ -38,7 +38,7 @@ public class AuthService {
 
         String encodedPassword = encodePassword(request.getPassword());
 
-        Member member = request.toEntity(encodedPassword, Role.CUSTOMER);
+        Member member = request.signUp(encodedPassword, Role.CUSTOMER);
 
         return memberRepository.save(member).getId();
     }
