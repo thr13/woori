@@ -18,8 +18,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/me")
-    public ResponseEntity<MemberResponse> me(@AuthenticationPrincipal SocialUser socialUser) {
-        Long memberId = socialUser.getMember().getId();
+    public ResponseEntity<MemberResponse> me(@AuthenticationPrincipal Long memberId) {
 
         MemberResponse response = memberService.getMe(memberId);
 
