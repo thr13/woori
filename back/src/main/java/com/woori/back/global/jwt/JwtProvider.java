@@ -29,6 +29,8 @@ public class JwtProvider {
 
     // accessToken 생성
     public String createAccessToken(Long userId, String role) {
+        log.info("accessToken 생성 - userId: {}, role: {}", userId, role);
+
         return jwtBuilder(userId, Token.ACCESS, properties.getAccessTokenExpireMs())
                 .claim("role", role)
                 .compact();
