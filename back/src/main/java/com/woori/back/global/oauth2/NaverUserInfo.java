@@ -24,6 +24,10 @@ public class NaverUserInfo {
     }
 
     public String getNickname() {
+        return getResponse().getNickname();
+    }
+
+    public String getName() {
         return getResponse().getName();
     }
 
