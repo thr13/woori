@@ -1,4 +1,4 @@
-package com.woori.back.domain.member.dto;
+package com.woori.back.domain.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
