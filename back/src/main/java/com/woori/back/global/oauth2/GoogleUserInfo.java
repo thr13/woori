@@ -22,14 +22,14 @@ public class GoogleUserInfo {
         return googleResponseDTO.getEmail();
     }
 
-    public String getProfile() {
-        return googleResponseDTO.getProfile(); // profile -> name
+    public String getName() {
+        return googleResponseDTO.getName();
     }
 
     public Member getGoogleMember() {
         return Member.createSocialMember(
                 googleResponseDTO.getEmail(),
-                googleResponseDTO.getProfile(),
+                googleResponseDTO.getName(),
                 SocialProvider.GOOGLE,
                 googleResponseDTO.getSub()
         );

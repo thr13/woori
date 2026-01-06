@@ -80,17 +80,22 @@ public class AuthService {
 
     @Transactional
     public TokenResponse reissue(String refreshToken) {
-        log.info("토큰 재발급 전: {}", refreshToken);
+        log.info("토큰 재발급 전");
 
         jwtProvider.validateRefreshToken(refreshToken); // jwt 검증
 
         getRefreshToken(refreshToken); // redis 토큰 존재 여부
 
-        Long userId = jwtProvider.getUserId(refreshToken);
-        String role = jwtProvider.getRole(refreshToken);
+        Long memberId = jwtProvider.getUserId(refreshToken);
 
-        String newAccessToken = jwtProvider.createAccessToken(userId, role); // 액세스 토큰 발급
-        log.info("재발급된 accessToken: {}", newAccessToken);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() ->
+                        new NotFoundMemberException("Not found member by id")
+                );
+        String role = member.getRole().name();
+
+        String newAccessToken = jwtProvider.createAccessToken(memberId, role); // 액세스 토큰 발급
+        log.info("토큰 재발급 성공: memberId={}, role={}", memberId, role);
 
         return new TokenResponse(newAccessToken, refreshToken, jwtProperties.getRefreshTokenExpireMs());
     }

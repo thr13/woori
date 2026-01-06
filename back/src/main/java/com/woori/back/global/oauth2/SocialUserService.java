@@ -32,7 +32,7 @@ public class SocialUserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest); // 스프링 시큐리티 oauth2
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // provider 식별키
-
+        log.info("attributes={}, registrationId={}", attributes, registrationId);
         SocialProvider socialProvider = SocialProvider.getSocialProvider(registrationId);
 
         Member member = extractSocialMember(socialProvider, attributes); // oauth2 타입별 Member 객체 생성
