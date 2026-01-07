@@ -17,4 +17,13 @@ public class AddressDTO {
     public Address to() {
         return new Address(zipcode, city, street, detail);
     }
+
+    public static AddressDTO from(Address address) {
+        return new AddressDTO(
+                address.getZipcode(),
+                address.getCity(),
+                address.getStreet(),
+                address.getDetail()
+        );
+    }
 }

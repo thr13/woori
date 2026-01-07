@@ -83,6 +83,10 @@ public class Cafe {
             this.name = name;
         }
 
+        if (StringUtils.hasText(introduction)) {
+            this.introduction = introduction;
+        }
+
         if (StringUtils.hasText(phone)) {
             this.phone = phone;
         }
