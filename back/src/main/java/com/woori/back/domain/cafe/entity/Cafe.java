@@ -3,6 +3,7 @@ package com.woori.back.domain.cafe.entity;
 import com.woori.back.domain.coupon.entity.Coupon;
 import com.woori.back.domain.coupon.entity.CouponPolicy;
 import com.woori.back.domain.member.entity.Member;
+import com.woori.back.domain.stamp.entity.Stamp;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,6 +34,9 @@ public class Cafe {
 
     @OneToMany(mappedBy = "cafe")
     private final List<CouponPolicy> couponPolicies = new ArrayList<>(); // 카페와 쿠폰 정책은 N:1 관계
+
+    @OneToMany(mappedBy = "cafe")
+    private final List<Stamp> stamps = new ArrayList<>(); // 카페와 스탬프는 1:N 관계
 
     @Column(nullable = false)
     private String name; // 가게명

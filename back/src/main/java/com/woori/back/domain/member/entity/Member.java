@@ -2,6 +2,7 @@ package com.woori.back.domain.member.entity;
 
 import com.woori.back.domain.cafe.entity.Cafe;
 import com.woori.back.domain.coupon.entity.Coupon;
+import com.woori.back.domain.stamp.entity.Stamp;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -46,6 +47,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private final List<Coupon> coupons = new ArrayList<>(); // 회원과 쿠폰은 N:1 관계
+
+    @OneToMany(mappedBy = "member")
+    private final List<Stamp> stamps = new ArrayList<>(); // 회원과 스탬프는 1:N 관계
 
     protected Member(
             String email,
