@@ -1,10 +1,13 @@
 package com.woori.back.domain.member.entity;
 
+import com.woori.back.domain.cafe.entity.Cafe;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -36,6 +39,9 @@ public class Member {
 
     @Column(name = "provider_id", nullable = true)
     private String providerId; // oauth2 고유 식별자
+
+    @OneToMany(mappedBy = "member")
+    private List<Cafe> cafes = new ArrayList<>();
 
     protected Member(
             String email,
@@ -88,4 +94,5 @@ public class Member {
     public void updateName(String name) {
         this.name = name;
     }
+
 }
