@@ -1,5 +1,6 @@
 package com.woori.back.domain.cafe.entity;
 
+import com.woori.back.domain.coupon.entity.CouponPolicy;
 import com.woori.back.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -7,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -21,7 +25,10 @@ public class Cafe {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member; // 회원과 카페는 1: N 관계
+    private Member member; // 회원과 카페는 1:N 관계
+
+    @OneToMany(mappedBy = "cafe")
+    private List<CouponPolicy> couponPolicies = new ArrayList<>(); // 카페와 쿠폰 정책은 N:1 관계
 
     @Column(nullable = false)
     private String name; // 가게명
