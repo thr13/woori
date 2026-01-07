@@ -28,7 +28,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
         SocialUser socialUser = (SocialUser) authentication.getPrincipal(); // SocialUserService 에서 반환한 SocialUser 추출
         Long memberId = socialUser.getMember().getId();
 

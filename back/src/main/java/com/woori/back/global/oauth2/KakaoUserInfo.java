@@ -2,9 +2,9 @@ package com.woori.back.global.oauth2;
 
 import com.woori.back.domain.member.entity.Member;
 import com.woori.back.domain.member.entity.SocialProvider;
-import com.woori.back.global.oauth2.dto.KakaoResponseDTO;
 import com.woori.back.global.oauth2.dto.KakaoAccount;
 import com.woori.back.global.oauth2.dto.KakaoProfile;
+import com.woori.back.global.oauth2.dto.KakaoResponseDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;

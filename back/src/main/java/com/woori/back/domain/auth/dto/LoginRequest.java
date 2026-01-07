@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class LoginRequest {
-    @Email @NotBlank
+    @Email
+    @NotBlank
     private String email;
 
     @NotBlank

@@ -1,0 +1,51 @@
+package com.woori.back.global.security;
+
+import com.woori.back.domain.member.entity.Member;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+@Getter
+@RequiredArgsConstructor
+public class LocalUser implements UserDetails {
+
+    private final Member member;
+
+    @Override
+    public boolean isAccountNonExpired() { // 계정 자체 만료 여부(false: 만료)
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() { // 계정 잠김 여부 (false: 잠김)
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() { // 비밀번호 만료 여부 (false: 만료)
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getRole().name()));
+
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return member.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return member.getEmail(); // 이메일을 아이디로 사용하기 때문에 회원의 username == email
+    }
+}

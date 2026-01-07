@@ -43,15 +43,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(accessToken) && jwtProvider.validateToken(accessToken)) {
 
-            Long userId = jwtProvider.getUserId(accessToken);
+            Long memberId = jwtProvider.getUserId(accessToken);
             String role = jwtProvider.getRole(accessToken);
-            log.info("현재 userId={}, role={}", userId, role);
+            log.info("현재 memberId={}, role={}", memberId, role);
 
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, null, authorities);
+            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+            Authentication authentication = new UsernamePasswordAuthenticationToken(memberId, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            log.debug("인증 객체 저장 완료: UserId={}", userId);
+            log.debug("인증 객체 저장 완료: memberId={}", memberId);
         }
 
         filterChain.doFilter(request, response);
