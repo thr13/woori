@@ -28,27 +28,27 @@ public class JwtProvider {
     }
 
     // accessToken 생성
-    public String createAccessToken(Long userId, String role) {
-        log.info("accessToken 생성 - userId: {}, role: {}", userId, role);
+    public String createAccessToken(Long memberId, String role) {
+        log.info("accessToken 생성 - memberId: {}, role: {}", memberId, role);
 
-        return jwtBuilder(userId, Token.ACCESS, properties.getAccessTokenExpireMs())
+        return jwtBuilder(memberId, Token.ACCESS, properties.getAccessTokenExpireMs())
                 .claim("role", role)
                 .compact();
     }
 
     // refreshToken 생성 -> refreshToken 은 role 이 필요없음
-    public String createRefreshToken(Long userId) {
-        return jwtBuilder(userId, Token.REFRESH, properties.getRefreshTokenExpireMs())
+    public String createRefreshToken(Long memberId) {
+        return jwtBuilder(memberId, Token.REFRESH, properties.getRefreshTokenExpireMs())
                 .compact();
     }
 
     // 토큰 공통 부분 생성
-    private JwtBuilder jwtBuilder(Long userId, Token type, long expirationTime) {
+    private JwtBuilder jwtBuilder(Long memberId, Token type, long expirationTime) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expirationTime);
 
         return Jwts.builder()
-                .subject(String.valueOf(userId))
+                .subject(String.valueOf(memberId))
                 .claim("type", type.name())
                 .issuedAt(now)
                 .expiration(expiration)
@@ -77,7 +77,7 @@ public class JwtProvider {
         }
     }
 
-    // 토큰에서 userId 추출
+    // 토큰에서 memberId 추출
     public Long getUserId(String token) {
         return Long.valueOf(parseClaims(token).getSubject());
     }
