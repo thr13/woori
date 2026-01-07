@@ -13,5 +13,6 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
     Optional<Cafe> findById(Long id);
 
     Page<CafesResponse> findByMember_Id(Long memberId, Pageable pageable);
+    
 }
 
