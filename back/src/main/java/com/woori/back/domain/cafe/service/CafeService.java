@@ -57,7 +57,7 @@ public class CafeService {
     public Page<CafesResponse> getMyCafes(Long memberId, Pageable pageable) {
         log.info("내 카페 목록 조회: {}", memberId);
 
-        return cafeRepository.findByMember_Id(memberId, pageable);
+        return cafeRepository.findByMember_Id(memberId, pageable).map(CafesResponse::from);
     }
 
     @Transactional(readOnly = true)
