@@ -99,5 +99,4 @@ public class Cafe {
             this.address = address;
         }
     }
-
 }
