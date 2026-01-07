@@ -14,3 +14,4 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
 
     Page<CafesResponse> findByMember_Id(Long memberId, Pageable pageable);
 }
+
