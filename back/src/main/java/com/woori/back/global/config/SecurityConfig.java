@@ -1,16 +1,12 @@
 package com.woori.back.global.config;
 
-import com.woori.back.domain.member.entity.Role;
 import com.woori.back.global.filter.JwtAuthenticationFilter;
 import com.woori.back.global.handler.OAuth2AuthenticationFailureHandler;
 import com.woori.back.global.handler.OAuth2AuthenticationSuccessHandler;
 import com.woori.back.global.oauth2.SocialUserService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,10 +21,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-@Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -77,7 +71,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()
                         .requestMatchers("/api/members/me").permitAll()
-                        .requestMatchers("/api/cafes/**").hasAnyRole(Role.OWNER.name(), Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
         ;
@@ -92,19 +85,6 @@ public class SecurityConfig {
 
         http
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // 스프링 시큐리티 기본 로그인 필터보다 먼저 토큰 검사
-
-        http
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((req, res, ex) -> {
-                            log.error("인증 실패[401]", ex);
-                            res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                        })
-                        .accessDeniedHandler((req, res, ex) -> {
-                            log.error("인가 실패[403]", ex);
-                            res.sendError(HttpServletResponse.SC_FORBIDDEN);
-                        })
-                )
-        ;
 
         return http.build();
     }
