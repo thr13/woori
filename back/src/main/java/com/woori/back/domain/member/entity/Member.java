@@ -1,6 +1,7 @@
 package com.woori.back.domain.member.entity;
 
 import com.woori.back.domain.cafe.entity.Cafe;
+import com.woori.back.domain.coupon.entity.Coupon;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,7 +42,10 @@ public class Member {
     private String providerId; // oauth2 고유 식별자
 
     @OneToMany(mappedBy = "member")
-    private List<Cafe> cafes = new ArrayList<>();
+    private final List<Cafe> cafes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private final List<Coupon> coupons = new ArrayList<>(); // 회원과 쿠폰은 N:1 관계
 
     protected Member(
             String email,

@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Table(name = "coupon_policy")
@@ -20,6 +23,9 @@ public class CouponPolicy {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cafe_id")
     private Cafe cafe; // 쿠폰정책과 카페는 1:N 관계
+
+    @OneToMany(mappedBy = "coupon_policy")
+    private final List<Coupon> coupons = new ArrayList<>(); // 쿠폰정책과 쿠폰은 N:1 관계
 
     private String reward; // 쿠폰 보상
 

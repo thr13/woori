@@ -1,5 +1,6 @@
 package com.woori.back.domain.cafe.entity;
 
+import com.woori.back.domain.coupon.entity.Coupon;
 import com.woori.back.domain.coupon.entity.CouponPolicy;
 import com.woori.back.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -28,7 +29,10 @@ public class Cafe {
     private Member member; // 회원과 카페는 1:N 관계
 
     @OneToMany(mappedBy = "cafe")
-    private List<CouponPolicy> couponPolicies = new ArrayList<>(); // 카페와 쿠폰 정책은 N:1 관계
+    private final List<Coupon> coupons = new ArrayList<>(); // 카페와 쿠폰은 N:1 관계
+
+    @OneToMany(mappedBy = "cafe")
+    private final List<CouponPolicy> couponPolicies = new ArrayList<>(); // 카페와 쿠폰 정책은 N:1 관계
 
     @Column(nullable = false)
     private String name; // 가게명

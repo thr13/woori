@@ -76,7 +76,9 @@ public class CouponPolicyService {
     @Transactional
     public void deleteCouponPolicy(Long couponPolicyId) {
         log.info("쿠폰 정책 삭제: {}", couponPolicyId);
-        couponPolicyRepository.deleteById(couponPolicyId);
+        CouponPolicy couponPolicy = findCouponPolicyById(couponPolicyId);
+
+        couponPolicyRepository.delete(couponPolicy);
     }
 
     private Cafe findCafeByCafeId(Long cafeId) {
