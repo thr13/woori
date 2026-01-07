@@ -77,4 +77,22 @@ public class CafeController {
 
         return ResponseEntity.noContent().build();
     }
+
+    // 카페 운영 시작
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
+    @PostMapping("/{cafeId}/open")
+    public ResponseEntity<CafeResponse> openCafe(@PathVariable Long cafeId) {
+        CafeResponse response = cafeService.openCafe(cafeId);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    // 카페 운영 종료
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
+    @PostMapping("/{cafeId}/close")
+    public ResponseEntity<CafeResponse> closedCafe(@PathVariable Long cafeId) {
+        CafeResponse response = cafeService.closedCafe(cafeId);
+
+        return ResponseEntity.ok().body(response);
+    }
 }

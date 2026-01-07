@@ -89,6 +89,22 @@ public class CafeService {
         cafeRepository.deleteById(cafeId);
     }
 
+    @Transactional
+    public CafeResponse openCafe(Long cafeId) {
+        Cafe cafe = findCafeById(cafeId);
+        cafe.open();
+
+        return CafeResponse.from(cafe);
+    }
+
+    @Transactional
+    public CafeResponse closedCafe(Long cafeId) {
+        Cafe cafe = findCafeById(cafeId);
+        cafe.closed();
+
+        return CafeResponse.from(cafe);
+    }
+
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(
