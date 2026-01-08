@@ -2,6 +2,7 @@ package com.woori.back.domain.stamp.entity;
 
 import com.woori.back.domain.cafe.entity.Cafe;
 import com.woori.back.domain.member.entity.Member;
+import com.woori.back.domain.stamp.exception.ShortageStampException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Entity
-@Table(name = "stamp")
+@Table(name = "stamp", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"member_id", "cafe_id"})
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Stamp {
 
@@ -28,7 +31,7 @@ public class Stamp {
     @JoinColumn(name = "cafe_id")
     private Cafe cafe; // 스탬프와 카페는 N:1 관계
 
-    private int amount; // 현재 스탬프 수
+    private int amount; // 현재 스탬프 수 (스탬프를 쿠폰으로 변경할 경우 차감됨)
 
     private int total; // 누적 스탬프 수
 
@@ -56,6 +59,20 @@ public class Stamp {
     public void addCafe(Cafe cafe) {
         this.cafe = cafe;
         cafe.getStamps().add(this);
+    }
+
+    // 스탬프 적립
+    public void accumulation(int amount) {
+        this.amount += amount;
+        this.total += amount;
+    }
+
+    // 스탬프 사용
+    public void use(int amount) {
+        if (this.amount < amount) { // 현재 가지고 있는 개수보다 사용 수가 많을 경우
+            throw new ShortageStampException("The number of stamps is insufficient");
+        }
+        this.amount -= amount;
     }
 
 }
