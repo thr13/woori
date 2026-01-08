@@ -5,11 +5,10 @@ import com.woori.back.domain.cafe.exception.NotFoundCafeException;
 import com.woori.back.domain.cafe.repository.CafeRepository;
 import com.woori.back.domain.member.entity.Member;
 import com.woori.back.domain.member.repository.MemberRepository;
-import com.woori.back.domain.stamp.dto.StampCreateRequest;
-import com.woori.back.domain.stamp.dto.StampCreateResponse;
-import com.woori.back.domain.stamp.dto.StampResponse;
+import com.woori.back.domain.stamp.dto.*;
 import com.woori.back.domain.stamp.entity.Stamp;
-import com.woori.back.domain.stamp.exception.NotFoundException;
+import com.woori.back.domain.stamp.exception.NotCafeOwnerException;
+import com.woori.back.domain.stamp.exception.NotFoundStampException;
 import com.woori.back.domain.stamp.repository.StampRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,15 +30,24 @@ public class StampService {
     @Transactional
     public StampCreateResponse createStamp(StampCreateRequest request) {
         log.info("스탬프 생성");
-        Cafe cafe = getCafeById(request.getCafeId());
-        Member member = getMemberById(request.getMemberId());
+        Long cafeId = request.getCafeId();
+        Long memberId = request.getMemberId();
+
+        Cafe cafe = getCafeById(cafeId);
+        Member member = getMemberById(memberId);
+
+        validateOwner(cafeId, memberId); // 카페 주인 검증
+
+        int amount = request.getAmount();
 
         Stamp stamp = Stamp.builder()
                 .member(member)
                 .cafe(cafe)
-                .amount(0)
-                .total(0)
+                .amount(amount)
+                .total(amount)
                 .build();
+
+        stampRepository.save(stamp); // 스탬프 저장
 
         return StampCreateResponse.from(stamp);
     }
@@ -70,10 +78,43 @@ public class StampService {
         stampRepository.delete(stamp);
     }
 
+    // 스탬프 적립
+    @Transactional
+    public StampResponse accumulationStamp(Long stampId, StampAccumulationRequest request) {
+        log.info("스탬프 적립");
+        Long cafeId = request.getCafeId();
+        Long memberId = request.getMemberId();
+
+        validateOwner(cafeId, memberId);
+
+        Stamp stamp = getStampById(stampId);
+
+        int amount = request.getAmount();
+        stamp.accumulation(amount);
+
+        // todo: db 반영 -> 더티체킹?
+
+        return StampResponse.from(stamp);
+    }
+
+    // 스탬프 사용
+    @Transactional
+    public StampResponse useStamp(Long stampId, StampUseRequest request) {
+        log.info("스탬프 사용(스탬프 서비스)");
+        Stamp stamp = getStampById(stampId);
+
+        int amount = request.getAmount();
+        stamp.use(amount);
+
+        // todo: 스탬프로 교환할 쿠폰 로직 추가 필요
+
+        return StampResponse.from(stamp);
+    }
+
     private Stamp getStampById(Long stampId) {
         return stampRepository.findById(stampId)
                 .orElseThrow(
-                        () -> new NotFoundException("Not found stamp by id " + stampId)
+                        () -> new NotFoundStampException("Not found stamp by id " + stampId)
                 );
     }
 
@@ -89,5 +130,11 @@ public class StampService {
                 .orElseThrow(
                         () -> new NotFoundCafeException("Not found member by id " + memberId)
                 );
+    }
+
+    private void validateOwner(Long cafeId, Long memberId) {
+        if (!cafeId.equals(memberId)) {
+            throw new NotCafeOwnerException("Only the owner of cafe can stamp");
+        }
     }
 }

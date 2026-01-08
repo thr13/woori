@@ -1,8 +1,6 @@
 package com.woori.back.domain.stamp.controller;
 
-import com.woori.back.domain.stamp.dto.StampCreateRequest;
-import com.woori.back.domain.stamp.dto.StampCreateResponse;
-import com.woori.back.domain.stamp.dto.StampResponse;
+import com.woori.back.domain.stamp.dto.*;
 import com.woori.back.domain.stamp.service.StampService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,5 +51,21 @@ public class StampController {
         stampService.deleteStamp(stampId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    // 스탬프 적립
+    @PostMapping("/{stampId}/accumulation")
+    public ResponseEntity<StampResponse> accumulationStamp(@PathVariable Long stampId, @RequestBody StampAccumulationRequest request) {
+        StampResponse response = stampService.accumulationStamp(stampId, request);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    // 스탬프 사용
+    @PostMapping("/{stampId}/use")
+    public ResponseEntity<StampResponse> useStamp(@PathVariable Long stampId, @RequestBody StampUseRequest request) {
+        StampResponse response = stampService.useStamp(stampId, request);
+
+        return ResponseEntity.ok().body(response);
     }
 }
