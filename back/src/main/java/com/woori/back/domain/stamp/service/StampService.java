@@ -85,16 +85,18 @@ public class StampService {
         Long cafeId = request.getCafeId();
         Long memberId = request.getMemberId();
 
-        validateOwner(cafeId, memberId);
+        validateOwner(cafeId, memberId); // 카페 주인인지 검증
 
-        Stamp stamp = getStampById(stampId);
+        Stamp stamp = getStampById(stampId); // 적립할 스탬프 객체 찾기
 
         int amount = request.getAmount();
-        stamp.accumulation(amount);
+        stamp.accumulation(amount);// 스탬프 적립 (아직 db 에 반영안됨)
 
-        // todo: db 반영 -> 더티체킹?
+        stampRepository.accumulationAmount(stampId, amount);// 스탬프 적립 (db 반영)
 
-        return StampResponse.from(stamp);
+        Stamp updateStamp = getStampById(stampId);// db 조회
+
+        return StampResponse.from(updateStamp);
     }
 
     // 스탬프 사용
