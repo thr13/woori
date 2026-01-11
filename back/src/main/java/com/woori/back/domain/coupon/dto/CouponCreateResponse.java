@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CouponCreateResponse {
     private Long id; // 쿠폰 식별번호
+    private String code; // 쿠폰 코드
 
     public static CouponCreateResponse from(Coupon coupon) {
-        return new CouponCreateResponse(coupon.getId());
+        return new CouponCreateResponse(coupon.getId(), coupon.getCode());
     }
 }

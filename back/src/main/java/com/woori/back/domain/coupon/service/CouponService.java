@@ -24,6 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -43,11 +45,14 @@ public class CouponService {
         Member member = findMemberById(request.getMemberId());
         Cafe cafe = findCafeById(request.getCafeId());
 
+        String code = String.valueOf(UUID.randomUUID());
+
         Coupon coupon = Coupon.builder()
                 .couponPolicy(couponPolicy)
                 .member(member)
                 .cafe(cafe)
                 .couponStatus(CouponStatus.ACTIVE)
+                .code(code)
                 .build();
 
         return CouponCreateResponse.from(coupon);

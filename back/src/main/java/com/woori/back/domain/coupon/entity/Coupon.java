@@ -33,12 +33,16 @@ public class Coupon {
     @Column(name = "coupon_status")
     private CouponStatus couponStatus;
 
+    @Column(name = "code")
+    private String code;
+
     @Builder
-    public Coupon(CouponPolicy couponPolicy, Member member, Cafe cafe, CouponStatus couponStatus) {
+    public Coupon(CouponPolicy couponPolicy, Member member, Cafe cafe, CouponStatus couponStatus, String code) {
         this.couponPolicy = couponPolicy;
         this.member = member;
         this.cafe = cafe;
         this.couponStatus = couponStatus;
+        this.code = code;
 
         if (couponPolicy != null) {
             addCouponPolicy(couponPolicy);
