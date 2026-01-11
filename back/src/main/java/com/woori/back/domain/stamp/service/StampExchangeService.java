@@ -1,5 +1,6 @@
 package com.woori.back.domain.stamp.service;
 
+import com.woori.back.domain.coupon.dto.CouponResponse;
 import com.woori.back.domain.coupon.entity.Coupon;
 import com.woori.back.domain.coupon.entity.CouponPolicy;
 import com.woori.back.domain.coupon.service.CouponPolicyService;
@@ -21,7 +22,7 @@ public class StampExchangeService {
 
     // 스탬프 교환 -> 쿠폰 발급
     @Transactional
-    public Coupon exchange(Long memberId, Long cafeId) {
+    public CouponResponse exchange(Long memberId, Long cafeId) {
         log.info("스탬프 쿠폰 교환");
         Stamp stamp = stampService.getStamp(memberId, cafeId);
 
@@ -30,6 +31,8 @@ public class StampExchangeService {
 
         stamp.use(stampNum); // 스탬프 사용
 
-        return couponService.issueCoupon(memberId, cafeId, couponPolicy); // 쿠폰 발급
+        Coupon coupon = couponService.issueCoupon(memberId, cafeId, couponPolicy);// 쿠폰 발급
+
+        return CouponResponse.from(coupon);
     }
 }

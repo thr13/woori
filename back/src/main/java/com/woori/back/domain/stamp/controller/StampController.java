@@ -1,6 +1,8 @@
 package com.woori.back.domain.stamp.controller;
 
+import com.woori.back.domain.coupon.dto.CouponResponse;
 import com.woori.back.domain.stamp.dto.*;
+import com.woori.back.domain.stamp.service.StampExchangeService;
 import com.woori.back.domain.stamp.service.StampService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import java.net.URI;
 public class StampController {
 
     private final StampService stampService;
+    private final StampExchangeService stampExchangeService;
 
     // 스탬프 생성
     @PostMapping
@@ -63,8 +66,11 @@ public class StampController {
 
     // 스탬프 사용
     @PostMapping("/{stampId}/use")
-    public ResponseEntity<StampResponse> useStamp(@PathVariable Long stampId, @RequestBody StampUseRequest request) {
-        StampResponse response = stampService.useStamp(stampId, request);
+    public ResponseEntity<CouponResponse> useStamp(@RequestBody StampUseRequest request) {
+        Long memberId = request.getMemberId();
+        Long cafeId = request.getCafeId();
+
+        CouponResponse response = stampExchangeService.exchange(memberId, cafeId);
 
         return ResponseEntity.ok().body(response);
     }
