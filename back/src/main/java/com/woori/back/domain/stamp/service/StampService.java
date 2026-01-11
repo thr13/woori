@@ -33,8 +33,8 @@ public class StampService {
         Long cafeId = request.getCafeId();
         Long memberId = request.getMemberId();
 
-        Cafe cafe = getCafeById(cafeId);
-        Member member = getMemberById(memberId);
+        Cafe cafe = findCafeByCafeId(cafeId);
+        Member member = findMemberByMemberId(memberId);
 
         validateOwner(cafeId, memberId); // 카페 주인 검증
 
@@ -56,7 +56,7 @@ public class StampService {
     @Transactional(readOnly = true)
     public StampResponse getStampInfo(Long stampId) {
         log.info("스탬프 조회");
-        Stamp stamp = getStampById(stampId);
+        Stamp stamp = findStampById(stampId);
 
         return StampResponse.from(stamp);
     }
@@ -73,7 +73,7 @@ public class StampService {
     @Transactional
     public void deleteStamp(Long stampId) {
         log.info("스탬프 제거");
-        Stamp stamp = getStampById(stampId);
+        Stamp stamp = findStampById(stampId);
 
         stampRepository.delete(stamp);
     }
@@ -87,47 +87,33 @@ public class StampService {
 
         validateOwner(cafeId, memberId); // 카페 주인인지 검증
 
-        Stamp stamp = getStampById(stampId); // 적립할 스탬프 객체 찾기
+        Stamp stamp = findStampById(stampId); // 적립할 스탬프 객체 찾기
 
         int amount = request.getAmount();
         stamp.accumulation(amount);// 스탬프 적립 (아직 db 에 반영안됨)
 
         stampRepository.accumulationAmount(stampId, amount);// 스탬프 적립 (db 반영)
 
-        Stamp updateStamp = getStampById(stampId);// db 조회
+        Stamp updateStamp = findStampById(stampId);// db 조회
 
         return StampResponse.from(updateStamp);
     }
 
-    // 스탬프 사용
-    @Transactional
-    public StampResponse useStamp(Long stampId, StampUseRequest request) {
-        log.info("스탬프 사용(스탬프 서비스)");
-        Stamp stamp = getStampById(stampId);
-
-        int amount = request.getAmount();
-        stamp.use(amount);
-
-        // todo: 스탬프로 교환할 쿠폰 로직 추가 필요
-
-        return StampResponse.from(stamp);
-    }
-
-    private Stamp getStampById(Long stampId) {
+    private Stamp findStampById(Long stampId) {
         return stampRepository.findById(stampId)
                 .orElseThrow(
                         () -> new NotFoundStampException("Not found stamp by id " + stampId)
                 );
     }
 
-    private Cafe getCafeById(Long cafeId) {
+    private Cafe findCafeByCafeId(Long cafeId) {
         return cafeRepository.findById(cafeId)
                 .orElseThrow(
                         () -> new NotFoundCafeException("Not found cafe by id " + cafeId)
                 );
     }
 
-    private Member getMemberById(Long memberId) {
+    private Member findMemberByMemberId(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(
                         () -> new NotFoundCafeException("Not found member by id " + memberId)
@@ -138,5 +124,15 @@ public class StampService {
         if (!cafeId.equals(memberId)) {
             throw new NotCafeOwnerException("Only the owner of cafe can stamp");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Stamp getStamp(Long memberId, Long cafeId) {
+        validateOwner(cafeId, memberId); // 본인 소유인지 확인
+
+        return stampRepository.findByMemberIdAndCafeId(memberId, cafeId)
+                .orElseThrow(
+                        () -> new NotFoundStampException("Not found stamp by member id: " + memberId + ", cafe id:" + cafeId)
+                );
     }
 }

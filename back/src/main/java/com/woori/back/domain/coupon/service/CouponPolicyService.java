@@ -94,4 +94,12 @@ public class CouponPolicyService {
                         () -> new NotFoundCouponPolicyException("Not found coupon policy by id: " + couponPolicyId)
                 );
     }
+
+    @Transactional(readOnly = true)
+    public CouponPolicy getCouponPolicy(Long cafeId) {
+        return couponPolicyRepository.findCouponPolicyByCafe_Id(cafeId)
+                .orElseThrow(
+                        () -> new NotFoundCouponPolicyException("Not found coupon policy by cafe id: " + cafeId)
+                );
+    }
 }

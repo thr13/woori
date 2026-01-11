@@ -132,4 +132,21 @@ public class CouponService {
                 );
     }
 
+    // 스탬프 교환으로 인한 쿠폰 발급
+    @Transactional
+    public Coupon issueCoupon(Long memberId, Long cafeId, CouponPolicy couponPolicy) {
+        Member member = findMemberById(memberId);
+        Cafe cafe = findCafeById(cafeId);
+
+        Coupon coupon = Coupon.builder()
+                .couponPolicy(couponPolicy)
+                .member(member)
+                .cafe(cafe)
+                .couponStatus(CouponStatus.ACTIVE)
+                .code(UUID.randomUUID().toString())
+                .build();
+
+        return couponRepository.save(coupon);
+    }
+
 }
