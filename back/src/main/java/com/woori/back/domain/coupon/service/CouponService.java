@@ -24,6 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -43,11 +45,14 @@ public class CouponService {
         Member member = findMemberById(request.getMemberId());
         Cafe cafe = findCafeById(request.getCafeId());
 
+        String code = String.valueOf(UUID.randomUUID());
+
         Coupon coupon = Coupon.builder()
                 .couponPolicy(couponPolicy)
                 .member(member)
                 .cafe(cafe)
                 .couponStatus(CouponStatus.ACTIVE)
+                .code(code)
                 .build();
 
         return CouponCreateResponse.from(coupon);
@@ -125,6 +130,23 @@ public class CouponService {
                 .orElseThrow(
                         () -> new NotFoundMemberException("Not found member by id: " + memberId)
                 );
+    }
+
+    // 스탬프 교환으로 인한 쿠폰 발급
+    @Transactional
+    public Coupon issueCoupon(Long memberId, Long cafeId, CouponPolicy couponPolicy) {
+        Member member = findMemberById(memberId);
+        Cafe cafe = findCafeById(cafeId);
+
+        Coupon coupon = Coupon.builder()
+                .couponPolicy(couponPolicy)
+                .member(member)
+                .cafe(cafe)
+                .couponStatus(CouponStatus.ACTIVE)
+                .code(UUID.randomUUID().toString())
+                .build();
+
+        return couponRepository.save(coupon);
     }
 
 }

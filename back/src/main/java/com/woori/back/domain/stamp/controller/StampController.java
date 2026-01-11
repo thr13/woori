@@ -1,8 +1,8 @@
 package com.woori.back.domain.stamp.controller;
 
-import com.woori.back.domain.stamp.dto.StampCreateRequest;
-import com.woori.back.domain.stamp.dto.StampCreateResponse;
-import com.woori.back.domain.stamp.dto.StampResponse;
+import com.woori.back.domain.coupon.dto.CouponResponse;
+import com.woori.back.domain.stamp.dto.*;
+import com.woori.back.domain.stamp.service.StampExchangeService;
 import com.woori.back.domain.stamp.service.StampService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +20,7 @@ import java.net.URI;
 public class StampController {
 
     private final StampService stampService;
+    private final StampExchangeService stampExchangeService;
 
     // 스탬프 생성
     @PostMapping
@@ -53,5 +54,24 @@ public class StampController {
         stampService.deleteStamp(stampId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    // 스탬프 적립
+    @PostMapping("/{stampId}/accumulation")
+    public ResponseEntity<StampResponse> accumulationStamp(@PathVariable Long stampId, @RequestBody StampAccumulationRequest request) {
+        StampResponse response = stampService.accumulationStamp(stampId, request);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    // 스탬프 사용
+    @PostMapping("/{stampId}/use")
+    public ResponseEntity<CouponResponse> useStamp(@RequestBody StampUseRequest request) {
+        Long memberId = request.getMemberId();
+        Long cafeId = request.getCafeId();
+
+        CouponResponse response = stampExchangeService.exchange(memberId, cafeId);
+
+        return ResponseEntity.ok().body(response);
     }
 }
