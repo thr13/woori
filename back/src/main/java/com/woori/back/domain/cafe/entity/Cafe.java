@@ -5,6 +5,7 @@ import com.woori.back.domain.coupon.entity.Coupon;
 import com.woori.back.domain.coupon.entity.CouponPolicy;
 import com.woori.back.domain.member.entity.Member;
 import com.woori.back.domain.stamp.entity.Stamp;
+import com.woori.back.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "cafe")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Cafe {
+public class Cafe extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
