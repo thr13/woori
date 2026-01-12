@@ -3,6 +3,7 @@ package com.woori.back.domain.cafe.service;
 import com.woori.back.domain.cafe.dto.*;
 import com.woori.back.domain.cafe.entity.Address;
 import com.woori.back.domain.cafe.entity.Cafe;
+import com.woori.back.domain.cafe.entity.CafeStatus;
 import com.woori.back.domain.cafe.exception.NotFoundCafeException;
 import com.woori.back.domain.cafe.repository.CafeRepository;
 import com.woori.back.domain.member.entity.Member;
@@ -87,22 +88,6 @@ public class CafeService {
     public void deleteCafe(Long cafeId) {
         log.info("카페 삭제");
         cafeRepository.deleteById(cafeId);
-    }
-
-    @Transactional
-    public CafeResponse openCafe(Long cafeId) {
-        Cafe cafe = findCafeById(cafeId);
-        cafe.open();
-
-        return CafeResponse.from(cafe);
-    }
-
-    @Transactional
-    public CafeResponse closedCafe(Long cafeId) {
-        Cafe cafe = findCafeById(cafeId);
-        cafe.closed();
-
-        return CafeResponse.from(cafe);
     }
 
     private Member findMemberById(Long memberId) {
