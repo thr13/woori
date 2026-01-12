@@ -45,8 +45,8 @@ public class CafeController {
     }
 
     // 카페 단일 조회
-    @GetMapping("/{cafeId}")
-    public ResponseEntity<CafeResponse> getCafe(@PathVariable Long cafeId) {
+    @GetMapping("/{cafe-id}")
+    public ResponseEntity<CafeResponse> getCafe(@PathVariable(name = "cafe-id") Long cafeId) {
         CafeResponse response = cafeService.getCafeInfo(cafeId);
 
         return ResponseEntity.ok().body(response);
@@ -62,8 +62,8 @@ public class CafeController {
 
     // 카페 수정
     @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
-    @PatchMapping("/{cafeId}")
-    public ResponseEntity<CafeResponse> updateCafeInfo(@PathVariable Long cafeId, @RequestBody CafeUpdateRequest request) {
+    @PatchMapping("/{cafe-id}")
+    public ResponseEntity<CafeResponse> updateCafeInfo(@PathVariable(name = "cafe-id") Long cafeId, @RequestBody CafeUpdateRequest request) {
         CafeResponse response = cafeService.updateCafeInfo(cafeId, request);
 
         return ResponseEntity.ok().body(response);
@@ -71,28 +71,12 @@ public class CafeController {
 
     // 카페 삭제
     @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
-    @DeleteMapping("/{cafeId}")
-    public ResponseEntity<Void> deleteCafe(@PathVariable Long cafeId) {
+    @DeleteMapping("/{cafe-id}")
+    public ResponseEntity<Void> deleteCafe(@PathVariable(name = "cafe-id") Long cafeId) {
         cafeService.deleteCafe(cafeId);
 
         return ResponseEntity.noContent().build();
     }
 
-    // 카페 운영 시작
-    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
-    @PostMapping("/{cafeId}/open")
-    public ResponseEntity<CafeResponse> openCafe(@PathVariable Long cafeId) {
-        CafeResponse response = cafeService.openCafe(cafeId);
 
-        return ResponseEntity.ok().body(response);
-    }
-
-    // 카페 운영 종료
-    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
-    @PostMapping("/{cafeId}/close")
-    public ResponseEntity<CafeResponse> closedCafe(@PathVariable Long cafeId) {
-        CafeResponse response = cafeService.closedCafe(cafeId);
-
-        return ResponseEntity.ok().body(response);
-    }
 }

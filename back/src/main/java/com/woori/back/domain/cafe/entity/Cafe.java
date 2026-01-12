@@ -1,5 +1,6 @@
 package com.woori.back.domain.cafe.entity;
 
+import com.woori.back.domain.cafe.exception.InvalidCafeStatusException;
 import com.woori.back.domain.coupon.entity.Coupon;
 import com.woori.back.domain.coupon.entity.CouponPolicy;
 import com.woori.back.domain.member.entity.Member;
@@ -81,16 +82,20 @@ public class Cafe {
         member.getCafes().add(this); // member -> cafe
     }
 
-    public void changeStatus(CafeStatus cafeStatus) {
-        this.cafeStatus = cafeStatus;
-    }
-
     public void open() {
-        changeStatus(CafeStatus.OPEN);
+        this.cafeStatus = CafeStatus.OPEN;
     }
 
     public void closed() {
-        changeStatus(CafeStatus.CLOSED);
+        this.cafeStatus = CafeStatus.CLOSED;
+    }
+
+    public void ready() {
+        this.cafeStatus = CafeStatus.READY;
+    }
+
+    public void rest() {
+        this.cafeStatus = CafeStatus.REST;
     }
 
     public void updateInfo(String name, String introduction, String phone, String imageUrl, Address address) {
