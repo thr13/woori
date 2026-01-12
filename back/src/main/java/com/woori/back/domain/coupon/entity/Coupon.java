@@ -2,6 +2,7 @@ package com.woori.back.domain.coupon.entity;
 
 import com.woori.back.domain.cafe.entity.Cafe;
 import com.woori.back.domain.member.entity.Member;
+import com.woori.back.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "coupon")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Coupon {
+public class Coupon extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

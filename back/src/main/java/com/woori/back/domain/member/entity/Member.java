@@ -3,6 +3,7 @@ package com.woori.back.domain.member.entity;
 import com.woori.back.domain.cafe.entity.Cafe;
 import com.woori.back.domain.coupon.entity.Coupon;
 import com.woori.back.domain.stamp.entity.Stamp;
+import com.woori.back.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "member", uniqueConstraints = {@UniqueConstraint(columnNames = {"social_provider", "provider_id"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
